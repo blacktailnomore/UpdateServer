@@ -289,7 +289,7 @@ string MD5::toString() {
 	return bytesToHexString(digest(), 16);
 }
 
-string MD5::ToMD5(const string& str) //MD5加密，其中密钥key=xyf，密钥需加在加密之前  
+string MD5::ToMD5(const string& str) //MD5鍔犲瘑锛屽叾涓瘑閽ey=xyf锛屽瘑閽ラ渶鍔犲湪鍔犲瘑涔嬪墠  
 {
 	const string str_word = str + MD5_Key;
 	reset();

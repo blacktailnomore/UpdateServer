@@ -1,7 +1,8 @@
 #ifndef MD5_H  
 #define MD5_H  
 
-#include <string>   
+#include <string>
+#include <cstring>
 #include <fstream>   
 #include "md5global.h"
 
@@ -23,7 +24,7 @@ public:
 	const byte* digest();
 	string toString();
 	void reset();
-	string ToMD5(const string& str);//如此，只需调用该函数便完成加密过程  
+	string ToMD5(const string& str);//濡傛锛屽彧闇�璋冪敤璇ュ嚱鏁颁究瀹屾垚鍔犲瘑杩囩▼  
 
 private:
 	void update(const byte* input, size_t length);

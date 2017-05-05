@@ -31,50 +31,52 @@ FileSystem* FileSystem::create(string dir) {
 vector<string>& FileSystem::getFiles(string dir) {
 	size_t count = 0;
 	_dir = dir;
+	if(isFileValid(_dir)){
 #ifdef WIN32
-	_finddata_t file_;
-	string total = dir + "*";
-	long lf_ = _findfirst(total.c_str(), &file_);
-	printf("%s\n", file_.name);
-	//printf("%d\n", lf_);
-	if (-1 == lf_) {
-		//LogÈÕÖ¾
-		printf("Ã»ÓÐÕÒµ½Ä¿Â¼");
-	}
-	else {
-		do {
-			if (file_.attrib&_A_SUBDIR)//Ìø¹ý×ÓÄ¿Â¼
-				continue;
-			//printf("%s\n", file_.name);
-			_allfilename.push_back(file_.name);
-			count++;
+        _finddata_t file_;
+        string total = dir + "*";
+        long lf_ = _findfirst(total.c_str(), &file_);
+        //printf("%s\n", file_.name);
+        //printf("%d\n", lf_);
+        if (-1 == lf_) {
+            //Logæ—¥å¿—
+            printf("æ²¡æœ‰æ‰¾åˆ°ç›®å½•");
+        }
+        else {
+            do {
+                if (file_.attrib&_A_SUBDIR)//è·³è¿‡å­ç›®å½•
+                    continue;
+                //printf("%s\n", file_.name);
+                _allfilename.push_back(file_.name);
+                count++;
 
-		} while (_findnext(lf_, &file_) == 0);
-	}
-	_findclose(lf_);
-	
+            } while (_findnext(lf_, &file_) == 0);
+        }
+        _findclose(lf_);
+
 #endif
 #ifdef linux
-	DIR* dir_;
-	dirent* ptr_;
-	dir_ = opendir(dir.c_str());
-	if (!dir_) {
-		//LogÈÕÖ¾
-		printf("%s", "Ã»ÓÐÕÒµ½Ä¿Â¼");
-		perror("Ã»ÓÐÕÒµ½Ä¿Â¼");
-	}
-	while ((ptr_ = readdir(dir_)) != NULL) {
-		if (ptr_->d_type == DT_REG) {
-			//printf("%s\n",ptr_->d_name);
-			_allfilename.push_back(ptr_->d_name);
-			count++;
-		}
-		else
-			continue;
-	}
-	closedir(dir_);
+        DIR* dir_;
+        dirent* ptr_;
+        dir_ = opendir(dir.c_str());
+        if (!dir_) {
+            //Logæ—¥å¿—
+            printf("%s", "æ²¡æœ‰æ‰¾åˆ°ç›®å½•");
+            perror("æ²¡æœ‰æ‰¾åˆ°ç›®å½•");
+        }
+        while ((ptr_ = readdir(dir_)) != NULL) {
+            if (ptr_->d_type == DT_REG) {
+                //printf("%s\n",ptr_->d_name);
+                _allfilename.push_back(ptr_->d_name);
+                count++;
+            }
+            else
+                continue;
+        }
+        closedir(dir_);
 #endif
-	printf("¹²ÓÐÎÄ¼þ£º%d¸ö\n", count);	
+    }
+	//printf("å…±æœ‰æ–‡ä»¶ï¼š%dä¸ª\n", count);
 	return _allfilename;
 }
 
@@ -82,12 +84,11 @@ File_MD5& FileSystem::calfile_md5() {
 	MD5 md5_;
 	_Allfileitr fitr;
 	ifstream in;
-	printf("%s\n", __TIME__);
+
 	for (fitr = _allfilename.begin(); fitr != _allfilename.end(); ++fitr) {
 		string absolutepath = _dir + *fitr;
-		in.open(absolutepath,std::ios::binary);
+		in.open(absolutepath.c_str(),std::ios::binary);
 		//printf("%s\n", absolutepath.c_str());
-
 		md5_.reset();
 		md5_.update(in);
 		string md5_str_ = md5_.toString();
@@ -98,12 +99,58 @@ File_MD5& FileSystem::calfile_md5() {
 	return _file_md5;
 }
 
+string& FileSystem::getSpecificFilename(string dir,string suffix){
 
+	return _filename;
+}
 
+bool FileSystem::setdir(string dir) {
+	_dir = dir;
+    return isFileValid(dir);
+}
+bool FileSystem::setfilename(string filename) {
+	_filename = filename;
+	if (!_filename.empty())
+		return true;
+	return false;
+}
 
+bool FileSystem::isFileValid(string filename){
+    #ifdef WIN32
+	if (_access(_dir.c_str(), 0) == 0)
+		return true;
+#endif
+#ifdef linux
+	if (access(_dir.c_str(),F_OK)==0)
+		return true;
+#endif
+    return false;
+}
 
+bool FileSystem::compareFileVersion(){
+    MConfig* mc=MConfig::create();
+    string filename_=_CONFPATH;
+    filename_+=_FILES;
+    bool Ret=mc->init(filename_);
+    //log
+    string version1_="confversion";
+    TiXmlElement* v_=mc->getNodebyName(mc->getDoc()->RootElement(),version1_);
+    //log
+    version1_=v_->GetText();
 
+    filename_.clear();
+    filename_+=_CONFPATH;
+    filename_+=_FILEN;
 
+    Ret=mc->init(filename_);
+    string version2_="modversion";
+    v_=mc->getNodebyName(mc->getDoc()->RootElement(),version2_);
+    //log
+    version2_=v_->GetText();
+    if(version1_==version2_)
+        return true;
+    return false;
+}
 
 
 
