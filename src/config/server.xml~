@@ -1,8 +1,0 @@
-<?xml version=1.0 coding="UTF-8"?>
-<allconfig>
-	<confversion>1.0</confversion>
-	<serverconfig>
-		<ip>127.0.0.1</ip>
-		<port>9001</port>
-	</serverconfig>
-</allconfig>
