@@ -1,9 +1,9 @@
-#ifndef MD5_H  
-#define MD5_H  
+#ifndef MD5_H
+#define MD5_H
 
 #include <string>
 #include <cstring>
-#include <fstream>   
+#include <fstream>
 #include "md5global.h"
 
 
@@ -21,10 +21,11 @@ public:
 	void update(const void* input, size_t length);
 	void update(const string& str);
 	void update(ifstream& in);
+	void update(FILE* fp);
 	const byte* digest();
 	string toString();
 	void reset();
-	string ToMD5(const string& str);//如此，只需调用该函数便完成加密过程  
+	string ToMD5(const string& str);//如此，只需调用该函数便完成加密过程
 
 private:
 	void update(const byte* input, size_t length);

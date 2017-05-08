@@ -25,22 +25,17 @@ int main()
 	string dir = "/home/blacktail/jar/";
 	//MD5 strmd5("123");
 	//cout << strmd5.toString() << endl;
-	//MD5 filemd5;
+	MD5 filemd5;
 	//filemd5.update(in);
 	//cout << filemd5.toString() << endl << "-------------------------------------" << endl;
 	//in.close();
-	FileSystem fd;
-	fd.getFiles(dir);
-	map<string, string> mymd5 = fd.calfile_md5();
-	map<string, string>::iterator mitr;
-//	for (mitr = mymd5.begin(); mitr != mymd5.end(); ++mitr) {
-//		cout << mitr->first << ":" << mitr->second << endl;
-//	}
 
-	MConfig* mc=MConfig::create();
+
+
+
 	//mc.createtest();
 	//mc->createXML(_FILEN, "1.0", mymd5);
-    cout<<fd.compareFileVersion();
+
 #ifdef WIN32
 	system("pause");
 #endif

@@ -1,4 +1,5 @@
-#include "md5.h"   
+#include "md5.h"
+#include <cstdio>
 //using namespace std;
 
 const string MD5_Key = "blacktail";
@@ -67,7 +68,7 @@ void MD5::update(const string& str) {
 	update((const byte*)str.c_str(), str.length());
 }
 
-/* Updating the context with a file. */
+/* Updating the context with a file. cpp*/
 void MD5::update(ifstream& in) {
 
 	if (!in) {
@@ -85,6 +86,20 @@ void MD5::update(ifstream& in) {
 	}
 	in.close();
 }
+
+/* Updating the context with a file. c */
+void MD5::update(FILE* fp){
+    if(!fp)
+        return;
+
+    int length;
+    char buffer[BUFFER_SIZE];
+    while((length=fread(buffer,1,BUFFER_SIZE,fp))>0){
+        if(length>0)
+            update(buffer,length);
+    }
+}
+
 
 /* MD5 block update operation. Continues an MD5 message-digest
 operation, processing another message block, and updating the
@@ -289,7 +304,7 @@ string MD5::toString() {
 	return bytesToHexString(digest(), 16);
 }
 
-string MD5::ToMD5(const string& str) //MD5加密，其中密钥key=xyf，密钥需加在加密之前  
+string MD5::ToMD5(const string& str) //MD5加密，其中密钥key=xyf，密钥需加在加密之前
 {
 	const string str_word = str + MD5_Key;
 	reset();

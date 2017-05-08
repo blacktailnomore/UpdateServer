@@ -2,15 +2,8 @@
 #define _CONFIG_H_
 
 #include "thirdlib/tinyxml.h"
-#include <string>
-#include <map>
 #include "commondef.h"
-using std::string;
-using std::map;
 
-
-typedef map<string, string> File_MD5;
-typedef map<string, string>::iterator File_MD5_ITR;
 
 class MConfig
 {
@@ -32,6 +25,8 @@ public:
 	TiXmlDocument* getDoc();
 
     TiXmlElement* getNodebyName(TiXmlElement* e_,string& NodeName);
+
+    inline bool isfileExist(){return isExist;}
 
 	void createtest();
 private:
